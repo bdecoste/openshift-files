@@ -197,13 +197,6 @@
             "required": true
         },
         {
-            "displayName": "ImageStream Namespace",
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "displayName": "JGroups Secret Name",
             "description": "The name of the secret containing the keystore file",
             "name": "JGROUPS_ENCRYPT_SECRET",
@@ -372,9 +365,6 @@
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
                     "name": "secure-${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -422,7 +412,6 @@
                         "forcePull": true,
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
                             "name": "jboss-eap70-openshift:1.5"
                         }
                     }
@@ -699,7 +688,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-amq-62:1.4"
                             }
                         }
