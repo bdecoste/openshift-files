@@ -120,13 +120,6 @@
             "required": true
         },
         {
-            "displayName": "ImageStream Namespace",
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "displayName": "Maven mirror URL",
             "description": "Maven mirror to use for S2I builds",
             "name": "MAVEN_MIRROR_URL",
@@ -226,9 +219,6 @@
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
                     "name": "secure-${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -276,7 +266,6 @@
                         "forcePull": true,
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
                             "name": "jboss-webserver31-tomcat8-openshift:1.0"
                         }
                     }
