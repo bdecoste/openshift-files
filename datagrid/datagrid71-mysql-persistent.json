@@ -166,13 +166,6 @@
             "required": true
         },
         {
-            "displayName": "ImageStream Namespace",
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "displayName": "Infinispan Connectors",
             "description": "Comma-separated list of connector types that should be configured (defaults to 'memcached,hotrod,rest')",
             "name": "INFINISPAN_CONNECTORS",
@@ -427,9 +420,6 @@
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
                     "name": "secure-${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -456,7 +446,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-datagrid71-openshift:1.0"
                             }
                         }
@@ -741,7 +730,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "mysql:${MYSQL_IMAGE_STREAM_TAG}"
                             }
                         }
