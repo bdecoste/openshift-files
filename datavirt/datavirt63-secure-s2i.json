@@ -164,13 +164,6 @@
             "required": true
         },
         {
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "displayName": "ImageStream Namespace",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "description": "The name of the secret containing the keystore to be used for securing JGroups communications.",
             "displayName": "JGroups Secret Name",
             "name": "JGROUPS_ENCRYPT_SECRET",
@@ -470,9 +463,6 @@
                 },
                 "to": {
                     "name": "${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -496,9 +486,6 @@
                 },
                 "to": {
                     "name": "${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -533,7 +520,6 @@
                         {
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-datagrid65-client-openshift:1.0"
                             },
                             "paths": [
@@ -551,7 +537,6 @@
                         "forcePull": true,
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
                             "name": "jboss-datavirt63-openshift:1.2"
                         },
                         "env": [
