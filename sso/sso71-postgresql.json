@@ -177,13 +177,6 @@
             "required": true
         },
         {
-            "displayName": "ImageStream Namespace",
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
-        },
-        {
             "displayName": "SSO Admin Username",
             "description": "SSO Server admin username",
             "name": "SSO_ADMIN_USERNAME",
@@ -366,9 +359,6 @@
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
                     "name": "secure-${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -396,8 +386,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
-                                "name": "redhat-sso71-openshift:1.1" 
+                                "name": "redhat-sso71-openshift:1.1"
                             }
                         }
                     },
@@ -670,7 +659,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "postgresql:${POSTGRESQL_IMAGE_STREAM_TAG}"
                             }
                         }

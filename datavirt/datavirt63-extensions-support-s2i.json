@@ -357,9 +357,6 @@
                 },
                 "to": {
                     "name": "${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -479,7 +476,6 @@
                         {
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-datagrid65-client-openshift:1.0"
                             },
                             "paths": [
@@ -509,7 +505,6 @@
                         "forcePull": true,
                         "from": {
                             "kind": "ImageStreamTag",
-                            "namespace": "${IMAGE_STREAM_NAMESPACE}",
                             "name": "jboss-datavirt63-openshift:1.2"
                         },
                         "env": [
