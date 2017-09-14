@@ -95,13 +95,6 @@
             "name": "AMQ_STORAGE_USAGE_LIMIT",
             "value": "100 gb",
             "required": false
-        },
-        {
-            "displayName": "ImageStream Namespace",
-            "description": "Namespace in which the ImageStreams for Red Hat Middleware images are installed. These ImageStreams are normally installed in the openshift namespace. You should only need to modify this if you've installed the ImageStreams in a different namespace/project.",
-            "name": "IMAGE_STREAM_NAMESPACE",
-            "value": "openshift",
-            "required": true
         }
     ],
     "objects": [
@@ -228,7 +221,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-amq-63:1.1"
                             }
                         }
@@ -385,7 +377,6 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "namespace": "${IMAGE_STREAM_NAMESPACE}",
                                 "name": "jboss-amq-63:1.1"
                             }
                         }
