@@ -3,6 +3,10 @@
 Greetings and welcome to the Middleware you can use during the OpenShift Travel Hackathon. Using any of the software 
 located here is sufficient to meeting the application requirements. 
 
+You are currently looking at the README.md for a 
+[github repository](https://github.com/redhat-middleware-hackathon/openshift-files). The directories listed below 
+refer to the directories in this repository. 
+
 ## Assumptions
 1. You have already logged into your OpenShift professional account with the _oc_ command line. 
 2. You already have a project in OpenShift. In this document we will call your project _MY-PROJECT_
@@ -30,4 +34,19 @@ Once you have chosen the software you want, you have two choices:
 Once you are looking at the raw file, copy the URL from your browser. Now do the following command:
 `oc create -f <url you just copied>` 
 
-STILL NEEDED - list of software and what it does
+## Software and short blurb
+
+| Product | Project | Description |
+| ------- | ------- | ------- |
+|JBoss EAP|Wildfly|Optimized for cloud and container environments, Red Hat JBoss Enterprise Application Platform is a market-leading, Java EE-certified platform built to meet the demands of today's web-scale applications.|
+|Tomcat (JWS)|Tomcat|Red Hat's supported Tomcat|
+|AMQ|Artemis|JBoss A-MQ is a lightweight, high-performance messaging platform. Its modular architecture and  support for multiple standards enables real-time integration to all facets of an enterprise.|
+|processserver (BPM Suite)|jBPM + Drools + Optaplanner|JBoss BPM Suite is an open source business process management platform.  It enables users to capture business processes, automate business operations and accelerate application development|
+|decisionserver (BRMS)|Drools + Optaplanner|JBoss BRMS is an open source Business Rules Management System. It enables users to capture business logic, automate business decisions and accelerate application development.|
+|OpenJDK|The OpenJDK|Used for building any Java project that uses just the JDK, like Vert.x or Wildfly.Swarm|
+|datagrid (JDG)|Infinispan|JDG is an enterprise open source in-memory data management store, used as Distributed cache, NoSQL database and Event broker.|
+|datavirt (JDV)|Teiid|Offers a relational abstraction of all information sources that is highly performant and allows for integration with your existing relational tools. Teiid has an accompanying easy-to-use design tool that enables data architects to integrate disparate information in minutes.|
+|sso (RHSSO)|Keycloack|An Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.  |
+
+
+
