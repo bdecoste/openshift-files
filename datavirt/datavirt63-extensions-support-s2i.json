@@ -15,7 +15,7 @@
         "template": "datavirt63-extensions-support-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications.",
+    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
     "parameters": [
         {
             "description": "The name for the application.",
@@ -102,7 +102,7 @@
             "required": false
         },
         {
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow usage of the secret(s) specified by CONFIGURATION_NAME, HTTPS_SECRET and JGROUPS_ENCRYPT_SECRET.",
+            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow usage of the secret(s) specified by CONFIGURATION_NAME, HTTPS_SECRET.",
             "displayName": "Service Account Name",
             "name": "SERVICE_ACCOUNT_NAME",
             "value": "datavirt-service-account",
@@ -187,42 +187,6 @@
             "description": "A secret string used to configure the Generic webhook.",
             "displayName": "Generic Webhook Secret",
             "name": "GENERIC_WEBHOOK_SECRET",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "description": "The name of the secret containing the keystore to be used for securing JGroups communications.",
-            "displayName": "JGroups Secret Name",
-            "name": "JGROUPS_ENCRYPT_SECRET",
-            "value": "datavirt-app-secret",
-            "required": false
-        },
-        {
-            "description": "The name of the keystore file within the JGroups secret.",
-            "displayName": "JGroups Keystore Filename",
-            "name": "JGROUPS_ENCRYPT_KEYSTORE",
-            "value": "jgroups.jceks",
-            "required": false
-        },
-        {
-            "description": "The name associated with the JGroups server certificate",
-            "displayName": "JGroups Certificate Name",
-            "name": "JGROUPS_ENCRYPT_NAME",
-            "value": "secret-key",
-            "required": false
-        },
-        {
-            "description": "The password for the keystore and certificate",
-            "displayName": "JGroups Keystore Password",
-            "name": "JGROUPS_ENCRYPT_PASSWORD",
-            "value": "password",
-            "required": false
-        },
-        {
-            "description": "Password used by JGroups to authenticate nodes in the cluster.",
-            "displayName": "JGroups Cluster Password",
-            "name": "JGROUPS_CLUSTER_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -628,11 +592,6 @@
                                         "name": "datavirt-keystore-volume",
                                         "mountPath": "/etc/datavirt-secret-volume",
                                         "readOnly": true
-                                    },
-                                    {
-                                        "name": "datavirt-jgroups-keystore-volume",
-                                        "mountPath": "/etc/jgroups-encrypt-secret-volume",
-                                        "readOnly": true
                                     }
                                 ],
                                 "livenessProbe": {
@@ -729,30 +688,6 @@
                                         "value": "${HTTPS_PASSWORD}"
                                     },
                                     {
-                                        "name": "JGROUPS_ENCRYPT_SECRET",
-                                        "value": "${JGROUPS_ENCRYPT_SECRET}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_KEYSTORE_DIR",
-                                        "value": "/etc/jgroups-encrypt-secret-volume"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_KEYSTORE",
-                                        "value": "${JGROUPS_ENCRYPT_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_NAME",
-                                        "value": "${JGROUPS_ENCRYPT_NAME}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_PASSWORD",
-                                        "value": "${JGROUPS_ENCRYPT_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_CLUSTER_PASSWORD",
-                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
-                                    },
-                                    {
                                         "name": "AUTO_DEPLOY_EXPLODED",
                                         "value": "${AUTO_DEPLOY_EXPLODED}"
                                     },
@@ -811,12 +746,6 @@
                                 "name": "datavirt-keystore-volume",
                                 "secret": {
                                     "secretName": "${HTTPS_SECRET}"
-                                }
-                            },
-                            {
-                                "name": "datavirt-jgroups-keystore-volume",
-                                "secret": {
-                                    "secretName": "${JGROUPS_ENCRYPT_SECRET}"
                                 }
                             }
                         ]
