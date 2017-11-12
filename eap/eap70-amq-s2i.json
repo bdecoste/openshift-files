@@ -499,7 +499,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "jboss-amq-62:1.4"
+                                "name": "jboss-amq-63:1.1"
                             }
                         }
                     },
