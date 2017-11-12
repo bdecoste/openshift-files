@@ -15,7 +15,7 @@
         "template": "datavirt63-extensions-support-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
+    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"datavirt-service-account\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
     "parameters": [
         {
             "description": "The name for the application.",
@@ -99,48 +99,6 @@
             "displayName": "Extensions Dockerfile",
             "name": "EXTENSIONS_DOCKERFILE",
             "value": "Dockerfile",
-            "required": false
-        },
-        {
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow usage of the secret(s) specified by CONFIGURATION_NAME, HTTPS_SECRET.",
-            "displayName": "Service Account Name",
-            "name": "SERVICE_ACCOUNT_NAME",
-            "value": "datavirt-service-account",
-            "required": true
-        },
-        {
-            "description": "The name of the secret containing the keystore to be used for serving secure content.",
-            "displayName": "Server Keystore Secret Name",
-            "name": "HTTPS_SECRET",
-            "value": "datavirt-app-secret",
-            "required": true
-        },
-        {
-            "description": "The name of the keystore file within the secret.",
-            "displayName": "Server Keystore Filename",
-            "name": "HTTPS_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "description": "The type of the keystore file (JKS or JCEKS).",
-            "displayName": "Server Keystore Type",
-            "name": "HTTPS_KEYSTORE_TYPE",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "The name associated with the server certificate.",
-            "displayName": "Server Certificate Name",
-            "name": "HTTPS_NAME",
-            "value": "jboss",
-            "required": false
-        },
-        {
-            "description": "The password for the keystore and certificate",
-            "displayName": "Server Keystore Password",
-            "name": "HTTPS_PASSWORD",
-            "value": "mykeystorepass",
             "required": false
         },
         {
@@ -232,11 +190,6 @@
                         "targetPort": "http"
                     },
                     {
-                        "name": "https",
-                        "port": 8443,
-                        "targetPort": "https"
-                    },
-                    {
                         "name": "jdbc",
                         "port": 31000,
                         "targetPort": "jdbc"
@@ -309,11 +262,11 @@
             },
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
-                "port": {
-                    "targetPort": "https"
-                },
                 "to": {
                     "name": "${APPLICATION_NAME}"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
@@ -337,9 +290,6 @@
                 },
                 "to": {
                     "name": "${APPLICATION_NAME}"
-                },
-                "tls": {
-                    "termination": "passthrough"
                 }
             }
         },
@@ -575,7 +525,7 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "${SERVICE_ACCOUNT_NAME}",
+                        "serviceAccountName": "datavirt-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
@@ -586,11 +536,6 @@
                                     {
                                         "name": "configuration",
                                         "mountPath": "/etc/datavirt-environment",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "datavirt-keystore-volume",
-                                        "mountPath": "/etc/datavirt-secret-volume",
                                         "readOnly": true
                                     }
                                 ],
@@ -621,11 +566,6 @@
                                     {
                                         "name": "http",
                                         "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "https",
-                                        "containerPort": 8443,
                                         "protocol": "TCP"
                                     },
                                     {
@@ -668,26 +608,6 @@
                                         }
                                     },
                                     {
-                                        "name": "HTTPS_KEYSTORE_DIR",
-                                        "value": "/etc/datavirt-secret-volume"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_NAME",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "HTTPS_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
-                                    },
-                                    {
                                         "name": "AUTO_DEPLOY_EXPLODED",
                                         "value": "${AUTO_DEPLOY_EXPLODED}"
                                     },
@@ -712,22 +632,6 @@
                                         "value": "/etc/datavirt-environment/*"
                                     },
                                     {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEY_ALIAS",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
-                                    },
-                                    {
                                         "name": "QS_DB_TYPE",
                                         "value": "derby",
                                         "description": "Used soley by the quickstart and set here to ensure the template can be instatiated with its default parameter values, i.e. so itworks ootb."
@@ -740,12 +644,6 @@
                                 "name": "configuration",
                                 "secret": {
                                     "secretName": "${CONFIGURATION_NAME}"
-                                }
-                            },
-                            {
-                                "name": "datavirt-keystore-volume",
-                                "secret": {
-                                    "secretName": "${HTTPS_SECRET}"
                                 }
                             }
                         ]

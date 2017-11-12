@@ -15,7 +15,7 @@
         "template": "datagrid71-https",
         "xpaas": "1.4.0"
     },
-    "message": "A new data grid service has been created in your project. It supports connector type(s) \"${INFINISPAN_CONNECTORS}\". Please be sure to create the \"datagrid-service-account\" service account and the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
+    "message": "A new data grid service has been created in your project. It supports connector type(s) \"${INFINISPAN_CONNECTORS}\".",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -49,34 +49,6 @@
             "displayName": "Password",
             "description": "The password to access the JDG Caches. Must be different than username; must not be root, admin, or administrator; must contain at least 8 characters, 1 alphabetic character(s), 1 digit(s), and 1 non-alphanumeric symbol(s). (optional)",
             "name": "PASSWORD",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Secret Name",
-            "description": "The name of the secret containing the keystore file",
-            "name": "HTTPS_SECRET",
-            "value": "datagrid-app-secret",
-            "required": true
-        },
-        {
-            "displayName": "Server Keystore Filename",
-            "description": "The name of the keystore file within the secret",
-            "name": "HTTPS_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "displayName": "Server Certificate Name",
-            "description": "The name associated with the server certificate",
-            "name": "HTTPS_NAME",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Password",
-            "description": "The password for the keystore and certificate",
-            "name": "HTTPS_PASSWORD",
             "value": "",
             "required": false
         },
@@ -152,30 +124,6 @@
                 },
                 "annotations": {
                     "description": "The web server's HTTP port."
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
-                        "port": 8443,
-                        "targetPort": 8443
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                }
-            },
-            "metadata": {
-                "name": "secure-${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The web server's HTTPS port."
                 }
             }
         },
@@ -263,7 +211,10 @@
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
-                    "name": "secure-${APPLICATION_NAME}"
+                    "name": "${APPLICATION_NAME}"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
@@ -311,7 +262,6 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "datagrid-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
@@ -319,11 +269,6 @@
                                 "image": "jboss-datagrid71-openshift",
                                 "imagePullPolicy": "Always",
                                 "volumeMounts": [
-                                    {
-                                        "name": "datagrid-keystore-volume",
-                                        "mountPath": "/etc/datagrid-secret-volume",
-                                        "readOnly": true
-                                    }
                                 ],
                                 "livenessProbe": {
                                     "exec": {
@@ -355,11 +300,6 @@
                                         "protocol": "TCP"
                                     },
                                     {
-                                        "name": "https",
-                                        "containerPort": 8443,
-                                        "protocol": "TCP"
-                                    },
-                                    {
                                         "name": "ping",
                                         "containerPort": 8888,
                                         "protocol": "TCP"
@@ -388,22 +328,6 @@
                                     {
                                         "name": "PASSWORD",
                                         "value": "${PASSWORD}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_DIR",
-                                        "value": "/etc/datagrid-secret-volume"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_NAME",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "HTTPS_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
                                     },
                                     {
                                         "name": "OPENSHIFT_KUBE_PING_LABELS",
@@ -453,12 +377,6 @@
                             }
                         ],
                         "volumes": [
-                            {
-                                "name": "datagrid-keystore-volume",
-                                "secret": {
-                                    "secretName": "${HTTPS_SECRET}"
-                                }
-                            }
                         ]
                     }
                 }

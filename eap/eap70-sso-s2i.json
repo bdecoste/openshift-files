@@ -74,48 +74,6 @@
             "required": false
         },
         {
-            "displayName": "Service Account Name",
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow useage of the secret(s) specified by HTTPS_SECRET.",
-            "name": "SERVICE_ACCOUNT_NAME",
-            "value": "eap7-service-account",
-            "required": true
-        },
-        {
-            "displayName": "Server Keystore Secret Name",
-            "description": "The name of the secret containing the keystore file",
-            "name": "HTTPS_SECRET",
-            "value": "eap7-app-secret",
-            "required": true
-        },
-        {
-            "displayName": "Server Keystore Filename",
-            "description": "The name of the keystore file within the secret",
-            "name": "HTTPS_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Type",
-            "description": "The type of the keystore file (JKS or JCEKS)",
-            "name": "HTTPS_KEYSTORE_TYPE",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Certificate Name",
-            "description": "The name associated with the server certificate (e.g. jboss)",
-            "name": "HTTPS_NAME",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Password",
-            "description": "The password for the keystore and certificate (e.g. mykeystorepass)",
-            "name": "HTTPS_PASSWORD",
-            "value": "",
-            "required": false
-        },
-        {
             "displayName": "HornetQ Password",
             "description": "HornetQ cluster admin password",
             "name": "HORNETQ_CLUSTER_PASSWORD",
@@ -203,34 +161,6 @@
             "required": false
         },
         {
-            "displayName": "SSO SAML Keystore Secret",
-            "description": "The name of the secret containing the keystore file",
-            "name": "SSO_SAML_KEYSTORE_SECRET",
-            "value": "eap7-app-secret",
-            "required": false
-        },
-        {
-            "displayName": "SSO SAML Keystore",
-            "description": "The name of the keystore file within the secret",
-            "name": "SSO_SAML_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "displayName": "SSO SAML Certificate Name",
-            "description": "The name associated with the server certificate",
-            "name": "SSO_SAML_CERTIFICATE_NAME",
-            "value": "jboss",
-            "required": false
-        },
-        {
-            "displayName": "SSO SAML Keystore Password",
-            "description": "The password for the keystore and certificate",
-            "name": "SSO_SAML_KEYSTORE_PASSWORD",
-            "value": "mykeystorepass",
-            "required": false
-        },
-        {
             "displayName": "SSO Client Secret",
             "description": "The SSO Client Secret for Confidential Access",
             "name": "SSO_SECRET",
@@ -257,27 +187,6 @@
             "description": "If true SSL communication between EAP and the SSO Server will be insecure (i.e. certificate validation is disabled with curl)",
             "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
             "value": "true",
-            "required": false
-        },
-        {
-            "displayName": "SSO Trust Store",
-            "description": "The name of the truststore file within the secret (e.g. truststore.jks)",
-            "name": "SSO_TRUSTSTORE",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "SSO Trust Store Password",
-            "description": "The password for the truststore and certificate (e.g. mykeystorepass)",
-            "name": "SSO_TRUSTSTORE_PASSWORD",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "SSO Trust Store Secret",
-            "description": "The name of the secret containing the truststore file (e.g. truststore-secret). Used for volume secretName",
-            "name": "SSO_TRUSTSTORE_SECRET",
-            "value": "eap7-app-secret",
             "required": false
         },
         {
@@ -310,30 +219,6 @@
                 },
                 "annotations": {
                     "description": "The web server's http port."
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
-                        "port": 8443,
-                        "targetPort": 8443
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                }
-            },
-            "metadata": {
-                "name": "secure-${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The web server's https port."
                 }
             }
         },
@@ -373,10 +258,10 @@
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
-                    "name": "secure-${APPLICATION_NAME}"
+                    "name": "${APPLICATION_NAME}"
                 },
                 "tls": {
-                    "termination": "passthrough"
+                    "termination": "edge"
                 }
             }
         },
@@ -505,7 +390,6 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "${SERVICE_ACCOUNT_NAME}",
                         "terminationGracePeriodSeconds": 75,
                         "containers": [
                             {
@@ -513,21 +397,6 @@
                                 "image": "${APPLICATION_NAME}",
                                 "imagePullPolicy": "Always",
                                 "volumeMounts": [
-                                    {
-                                        "name": "sso-saml-keystore-volume",
-                                        "mountPath": "/etc/sso-saml-secret-volume",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "eap-keystore-volume",
-                                        "mountPath": "/etc/eap-secret-volume",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "sso-truststore-volume",
-                                        "mountPath": "/etc/sso-secret-volume",
-                                        "readOnly": true
-                                    }
                                 ],
                                 "lifecycle": {
                                     "preStop": {
@@ -570,11 +439,6 @@
                                         "protocol": "TCP"
                                     },
                                     {
-                                        "name": "https",
-                                        "containerPort": 8443,
-                                        "protocol": "TCP"
-                                    },
-                                    {
                                         "name": "ping",
                                         "containerPort": 8888,
                                         "protocol": "TCP"
@@ -600,26 +464,6 @@
                                     {
                                         "name": "HOSTNAME_HTTPS",
                                         "value": "${HOSTNAME_HTTPS}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_DIR",
-                                        "value": "/etc/eap-secret-volume"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_NAME",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "HTTPS_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
                                     },
                                     {
                                         "name": "HORNETQ_CLUSTER_PASSWORD",
@@ -662,30 +506,6 @@
                                         "value": "${SSO_PUBLIC_KEY}"
                                     },
                                     {
-                                        "name": "SSO_BEARER_ONLY",
-                                        "value": "${SSO_BEARER_ONLY}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_SECRET",
-                                        "value": "${SSO_SAML_KEYSTORE_SECRET}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE",
-                                        "value": "${SSO_SAML_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_DIR",
-                                        "value": "/etc/sso-saml-secret-volume"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_CERTIFICATE_NAME",
-                                        "value": "${SSO_SAML_CERTIFICATE_NAME}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_PASSWORD",
-                                        "value": "${SSO_SAML_KEYSTORE_PASSWORD}"
-                                    },
-                                    {
                                         "name": "SSO_SECRET",
                                         "value": "${SSO_SECRET}"
                                     },
@@ -700,41 +520,11 @@
                                     {
                                         "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
                                         "value": "${SSO_DISABLE_SSL_CERTIFICATE_VALIDATION}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE",
-                                        "value": "${SSO_TRUSTSTORE}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_DIR",
-                                        "value": "/etc/sso-secret-volume"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_PASSWORD",
-                                        "value": "${SSO_TRUSTSTORE_PASSWORD}"
                                     }
                                 ]
                             }
                         ],
                         "volumes": [
-                            {
-                                "name": "sso-saml-keystore-volume",
-                                "secret": {
-                                    "secretName": "${SSO_SAML_KEYSTORE_SECRET}"
-                                }
-                            },
-                            {
-                                "name": "eap-keystore-volume",
-                                "secret": {
-                                    "secretName": "${HTTPS_SECRET}"
-                                }
-                            },
-                            {
-                                "name": "sso-truststore-volume",
-                                "secret": {
-                                    "secretName": "${SSO_TRUSTSTORE_SECRET}"
-                                }
-                            }
                         ]
                     }
                 }

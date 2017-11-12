@@ -53,48 +53,6 @@
             "required": true
         },
         {
-            "displayName": "Service Account Name",
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow useage of the secret(s) specified by HTTPS_SECRET.",
-            "name": "SERVICE_ACCOUNT_NAME",
-            "value": "sso-service-account",
-            "required": true
-        },
-        {
-            "displayName": "Server Keystore Secret Name",
-            "description": "The name of the secret containing the keystore file",
-            "name": "HTTPS_SECRET",
-            "value": "sso-app-secret",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Filename",
-            "description": "The name of the keystore file within the secret",
-            "name": "HTTPS_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Type",
-            "description": "The type of the keystore file (JKS or JCEKS)",
-            "name": "HTTPS_KEYSTORE_TYPE",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Certificate Name",
-            "description": "The name associated with the server certificate (e.g. jboss)",
-            "name": "HTTPS_NAME",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "Server Keystore Password",
-            "description": "The password for the keystore and certificate (e.g. mykeystorepass)",
-            "name": "HTTPS_PASSWORD",
-            "value": "",
-            "required": false
-        },
-        {
             "displayName": "Datasource Minimum Pool Size",
             "description": "Sets xa-pool/min-pool-size for the configured datasource.",
             "name": "DB_MIN_POOL_SIZE",
@@ -185,27 +143,6 @@
             "required": false
         },
         {
-            "displayName": "SSO Trust Store",
-            "description": "The name of the truststore file within the secret (e.g. truststore.jks)",
-            "name": "SSO_TRUSTSTORE",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "SSO Trust Store Password",
-            "description": "The password for the truststore and certificate (e.g. mykeystorepass)",
-            "name": "SSO_TRUSTSTORE_PASSWORD",
-            "value": "",
-            "required": false
-        },
-        {
-            "displayName": "SSO Trust Store Secret",
-            "description": "The name of the secret containing the truststore file (e.g. truststore-secret). Used for volume secretName",
-            "name": "SSO_TRUSTSTORE_SECRET",
-            "value": "sso-app-secret",
-            "required": false
-        },
-        {
             "displayName": "PostgreSQL Image Stream Tag",
             "description": "The tag to use for the \"postgresql\" image stream.  Typically, this aligns with the major.minor version of PostgreSQL.",
             "name": "POSTGRESQL_IMAGE_STREAM_TAG",
@@ -235,31 +172,6 @@
                 },
                 "annotations": {
                     "description": "The web server's http port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-postgresql\", \"kind\": \"Service\"}]"
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
-                        "port": 8443,
-                        "targetPort": 8443
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                }
-            },
-            "metadata": {
-                "name": "secure-${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The web server's https port.",
                     "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-postgresql\", \"kind\": \"Service\"}]"
                 }
             }
@@ -324,7 +236,10 @@
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
-                    "name": "secure-${APPLICATION_NAME}"
+                    "name": "${APPLICATION_NAME}"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
@@ -372,7 +287,6 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "${SERVICE_ACCOUNT_NAME}",
                         "terminationGracePeriodSeconds": 75,
                         "containers": [
                             {
@@ -380,16 +294,6 @@
                                 "image": "${APPLICATION_NAME}",
                                 "imagePullPolicy": "Always",
                                 "volumeMounts": [
-                                    {
-                                        "name": "eap-keystore-volume",
-                                        "mountPath": "/etc/eap-secret-volume",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "sso-truststore-volume",
-                                        "mountPath": "/etc/sso-secret-volume",
-                                        "readOnly": true
-                                    }
                                 ],
                                 "lifecycle": {
                                     "preStop": {
@@ -429,11 +333,6 @@
                                     {
                                         "name": "http",
                                         "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "https",
-                                        "containerPort": 8443,
                                         "protocol": "TCP"
                                     },
                                     {
@@ -492,26 +391,6 @@
                                         }
                                     },
                                     {
-                                        "name": "HTTPS_KEYSTORE_DIR",
-                                        "value": "/etc/eap-secret-volume"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_NAME",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "HTTPS_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
-                                    },
-                                    {
                                         "name": "SSO_ADMIN_USERNAME",
                                         "value": "${SSO_ADMIN_USERNAME}"
                                     },
@@ -530,35 +409,11 @@
                                     {
                                         "name": "SSO_SERVICE_PASSWORD",
                                         "value": "${SSO_SERVICE_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE",
-                                        "value": "${SSO_TRUSTSTORE}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_DIR",
-                                        "value": "/etc/sso-secret-volume"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_PASSWORD",
-                                        "value": "${SSO_TRUSTSTORE_PASSWORD}"
                                     }
                                 ]
                             }
                         ],
                         "volumes": [
-                            {
-                                "name": "eap-keystore-volume",
-                                "secret": {
-                                    "secretName": "${HTTPS_SECRET}"
-                                }
-                            },
-                            {
-                                "name": "sso-truststore-volume",
-                                "secret": {
-                                    "secretName": "${SSO_TRUSTSTORE_SECRET}"
-                                }
-                            }
                         ]
                     }
                 }
