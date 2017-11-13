@@ -122,6 +122,14 @@
             "required": true
         },
         {
+            "description": "Password used by JGroups to authenticate nodes in the cluster.",
+            "displayName": "JGroups Cluster Password",
+            "name": "JGROUPS_CLUSTER_PASSWORD",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
             "description": "Controls whether exploded deployment content should be automatically deployed",
             "displayName": "Deploy Exploded Archives",
             "name": "AUTO_DEPLOY_EXPLODED",
@@ -592,6 +600,10 @@
                                         }
                                     },
                                     {
+                                        "name": "JGROUPS_CLUSTER_PASSWORD",
+                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
+                                    },
+                                    {
                                         "name": "AUTO_DEPLOY_EXPLODED",
                                         "value": "${AUTO_DEPLOY_EXPLODED}"
                                     },
@@ -638,6 +650,10 @@
                                     {
                                         "name": "SSO_PUBLIC_KEY",
                                         "value": "${SSO_PUBLIC_KEY}"
+                                    },
+                                    {
+                                        "name": "SSO_BEARER_ONLY",
+                                        "value": "${SSO_BEARER_ONLY}"
                                     },
                                     {
                                         "name": "SSO_SECRET",
