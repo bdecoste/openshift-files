@@ -13,11 +13,11 @@ refer to the directories in this repository.
 
 ## Steps to getting going
 
-You need to do these steps no matter which Middleware you are going to use.
+You need to do these steps no matter which Middleware you are going to use. Be sure to change the [My-Project] in the second command to your project name. 
 Do all the following from the command line:
 
-1. `oc create -f https://https://raw.githubusercontent.com/redhat-middleware-hackathon/openshift-files/master/jboss-image-streams.json  `
-2. `oc policy add-role-to-user view system:serviceaccount:MY-PROJECT:default`
+1. `oc create -f https://raw.githubusercontent.com/redhat-middleware-hackathon/openshift-files/master/jboss-image-streams.json  `
+2. `oc policy add-role-to-user view system:serviceaccount:[MY-PROJECT]:default`
 
 ## Choosing your Software
 
@@ -33,6 +33,14 @@ Once you have chosen the software you want, you have two choices:
 2. In GitHub, click on the file link, then on the next page click on the "raw" button on the right side above the file. 
 Once you are looking at the raw file, copy the URL from your browser. Now do the following command:
 `oc create -f <url you just copied>` 
+
+Once that is done - you have two methods to use the templates you just added to your project:
+
+1. In the web console, go to the Add Project button and then in the catalog, under Java, you should see a new template for the one you added. This may be under the product name you added. For example, EAP-basic will end up under the EAP category.
+2. Using the command line you can do:
+    a. oc get templates (this will give you a list of the templates in your project)
+    b. oc describe templates [your template of interest] (this will show you the possible parameters you can fill in
+    c. oc new-app [your template of interest] -p parameter1=value1 paratermeter2=value2
 
 ## Software and short blurb
 
