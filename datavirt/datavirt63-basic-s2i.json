@@ -15,7 +15,7 @@
         "template": "datavirt63-basic-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the secret named ${CONFIGURATION_NAME} containing the datasource configuration details required by the deployed VDB(s).",
+    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"datavirt-service-account\" service account and the secret named ${CONFIGURATION_NAME} containing the datasource configuration details required by the deployed VDB(s).",
     "parameters": [
         {
             "description": "The name for the application.",
@@ -58,13 +58,6 @@
             "name": "CONTEXT_DIR",
             "value": "datavirt/dynamicvdb-datafederation/app",
             "required": false
-        },
-        {
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow usage of the secret specified by CONFIGURATION_NAME.",
-            "displayName": "Service Account Name",
-            "name": "SERVICE_ACCOUNT_NAME",
-            "value": "datavirt-service-account",
-            "required": true
         },
         {
             "description": "Username associated with Teiid data service.",
@@ -110,14 +103,6 @@
             "description": "A secret string used to configure the Generic webhook.",
             "displayName": "Generic Webhook Secret",
             "name": "GENERIC_WEBHOOK_SECRET",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "description": "Password used by JGroups to authenticate nodes in the cluster.",
-            "displayName": "JGroups Cluster Password",
-            "name": "JGROUPS_CLUSTER_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -362,7 +347,7 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "${SERVICE_ACCOUNT_NAME}",
+                        "serviceAccountName": "datavirt-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
@@ -433,10 +418,6 @@
                                                 "fieldPath": "metadata.namespace"
                                             }
                                         }
-                                    },
-                                    {
-                                        "name": "JGROUPS_CLUSTER_PASSWORD",
-                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     },
                                     {
                                         "name": "AUTO_DEPLOY_EXPLODED",

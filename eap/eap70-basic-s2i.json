@@ -89,14 +89,6 @@
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
-        },       
-        {
-            "displayName": "JGroups Cluster Password",
-            "description": "JGroups cluster password",
-            "name": "JGROUPS_CLUSTER_PASSWORD",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
         },
         {
             "displayName": "Deploy Exploded Archives",
@@ -361,10 +353,6 @@
                                     {
                                         "name": "MQ_TOPICS",
                                         "value": "${MQ_TOPICS}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_CLUSTER_PASSWORD",
-                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     },
                                     {
                                         "name": "AUTO_DEPLOY_EXPLODED",

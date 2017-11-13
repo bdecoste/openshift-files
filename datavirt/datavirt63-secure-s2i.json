@@ -15,7 +15,7 @@
         "template": "datavirt63-secure-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; \"${JGROUPS_ENCRYPT_SECRET}\" containing the ${JGROUPS_ENCRYPT_KEYSTORE} file used for securing JGroups communications.",
+    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"datavirt-service-account\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
     "parameters": [
         {
             "description": "The name for the application.",
@@ -74,48 +74,6 @@
             "required": false
         },
         {
-            "description": "The name of the service account to use for the deployment.  The service account should be configured to allow usage of the secret(s) specified by CONFIGURATION_NAME, HTTPS_SECRET and JGROUPS_ENCRYPT_SECRET.",
-            "displayName": "Service Account Name",
-            "name": "SERVICE_ACCOUNT_NAME",
-            "value": "datavirt-service-account",
-            "required": true
-        },
-        {
-            "description": "The name of the secret containing the keystore to be used for serving secure content.",
-            "displayName": "Server Keystore Secret Name",
-            "name": "HTTPS_SECRET",
-            "value": "datavirt-app-secret",
-            "required": true
-        },
-        {
-            "description": "The name of the keystore file within the secret.",
-            "displayName": "Server Keystore Filename",
-            "name": "HTTPS_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "description": "The type of the keystore file (JKS or JCEKS).",
-            "displayName": "Server Keystore Type",
-            "name": "HTTPS_KEYSTORE_TYPE",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "The name associated with the server certificate.",
-            "displayName": "Server Certificate Name",
-            "name": "HTTPS_NAME",
-            "value": "jboss",
-            "required": false
-        },
-        {
-            "description": "The password for the keystore and certificate",
-            "displayName": "Server Keystore Password",
-            "name": "HTTPS_PASSWORD",
-            "value": "mykeystorepass",
-            "required": false
-        },
-        {
             "description": "Username associated with Teiid data service.",
             "displayName": "Teiid Username",
             "name": "TEIID_USERNAME",
@@ -159,42 +117,6 @@
             "description": "A secret string used to configure the Generic webhook.",
             "displayName": "Generic Webhook Secret",
             "name": "GENERIC_WEBHOOK_SECRET",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "description": "The name of the secret containing the keystore to be used for securing JGroups communications.",
-            "displayName": "JGroups Secret Name",
-            "name": "JGROUPS_ENCRYPT_SECRET",
-            "value": "datavirt-app-secret",
-            "required": false
-        },
-        {
-            "description": "The name of the keystore file within the JGroups secret.",
-            "displayName": "JGroups Keystore Filename",
-            "name": "JGROUPS_ENCRYPT_KEYSTORE",
-            "value": "jgroups.jceks",
-            "required": false
-        },
-        {
-            "description": "The name associated with the JGroups server certificate",
-            "displayName": "JGroups Certificate Name",
-            "name": "JGROUPS_ENCRYPT_NAME",
-            "value": "secret-key",
-            "required": false
-        },
-        {
-            "description": "The password for the keystore and certificate",
-            "displayName": "JGroups Keystore Password",
-            "name": "JGROUPS_ENCRYPT_PASSWORD",
-            "value": "password",
-            "required": false
-        },
-        {
-            "description": "Password used by JGroups to authenticate nodes in the cluster.",
-            "displayName": "JGroups Cluster Password",
-            "name": "JGROUPS_CLUSTER_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -263,34 +185,6 @@
             "required": false
         },
         {
-            "description": "The name of the secret containing the keystore file",
-            "displayName": "SSO SAML Keystore Secret",
-            "name": "SSO_SAML_KEYSTORE_SECRET",
-            "value": "datavirt-app-secret",
-            "required": false
-        },
-        {
-            "description": "The name of the keystore file within the secret",
-            "displayName": "SSO SAML Keystore File",
-            "name": "SSO_SAML_KEYSTORE",
-            "value": "keystore.jks",
-            "required": false
-        },
-        {
-            "description": "The name associated with the server certificate",
-            "displayName": "SSO SAML Certificate Alias",
-            "name": "SSO_SAML_CERTIFICATE_NAME",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "The password for the keystore and certificate",
-            "name": "SSO_SAML_KEYSTORE_PASSWORD",
-            "displayName": "SSO SAML Keystore Password",
-            "value": "",
-            "required": false
-        },
-        {
             "description": "The SSO Client Secret for Confidential Access",
             "name": "SSO_SECRET",
             "displayName": "SSO Client Secret",
@@ -317,27 +211,6 @@
             "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
             "displayName": "SSO Disable SSL Certificate Validation",
             "value": "true",
-            "required": false
-        },
-        {
-            "description": "The name of the truststore file within the secret (e.g. truststore.jks)",
-            "name": "SSO_TRUSTSTORE",
-            "displayName": "SSO Truststore File",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "The password for the truststore and certificate (e.g. mykeystorepass)",
-            "name": "SSO_TRUSTSTORE_PASSWORD",
-            "displayName": "SSO Truststore Password",
-            "value": "",
-            "required": false
-        },
-        {
-            "description": "The name of the secret containing the truststore file (e.g. truststore-secret). Used for volume secretName",
-            "name": "SSO_TRUSTSTORE_SECRET",
-            "displayName": "SSO Truststore Secret",
-            "value": "datavirt-app-secret",
             "required": false
         },
         {
@@ -379,11 +252,6 @@
                         "name": "http",
                         "port": 8080,
                         "targetPort": "http"
-                    },
-                    {
-                        "name": "https",
-                        "port": 8443,
-                        "targetPort": "https"
                     },
                     {
                         "name": "jdbc",
@@ -458,11 +326,11 @@
             },
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
-                "port": {
-                    "targetPort": "https"
-                },
                 "to": {
                     "name": "${APPLICATION_NAME}"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
@@ -641,7 +509,7 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "${SERVICE_ACCOUNT_NAME}",
+                        "serviceAccountName": "datavirt-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
@@ -652,16 +520,6 @@
                                     {
                                         "name": "configuration",
                                         "mountPath": "/etc/datavirt-environment",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "datavirt-keystore-volume",
-                                        "mountPath": "/etc/datavirt-secret-volume",
-                                        "readOnly": true
-                                    },
-                                    {
-                                        "name": "datavirt-jgroups-keystore-volume",
-                                        "mountPath": "/etc/jgroups-encrypt-secret-volume",
                                         "readOnly": true
                                     }
                                 ],
@@ -692,11 +550,6 @@
                                     {
                                         "name": "http",
                                         "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "https",
-                                        "containerPort": 8443,
                                         "protocol": "TCP"
                                     },
                                     {
@@ -739,50 +592,6 @@
                                         }
                                     },
                                     {
-                                        "name": "HTTPS_KEYSTORE_DIR",
-                                        "value": "/etc/datavirt-secret-volume"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "HTTPS_NAME",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "HTTPS_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_SECRET",
-                                        "value": "${JGROUPS_ENCRYPT_SECRET}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_KEYSTORE_DIR",
-                                        "value": "/etc/jgroups-encrypt-secret-volume"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_KEYSTORE",
-                                        "value": "${JGROUPS_ENCRYPT_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_NAME",
-                                        "value": "${JGROUPS_ENCRYPT_NAME}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_ENCRYPT_PASSWORD",
-                                        "value": "${JGROUPS_ENCRYPT_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "JGROUPS_CLUSTER_PASSWORD",
-                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
-                                    },
-                                    {
                                         "name": "AUTO_DEPLOY_EXPLODED",
                                         "value": "${AUTO_DEPLOY_EXPLODED}"
                                     },
@@ -805,22 +614,6 @@
                                     {
                                         "name": "ENV_FILES",
                                         "value": "/etc/datavirt-environment/*"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE",
-                                        "value": "${HTTPS_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE_TYPE",
-                                        "value": "${HTTPS_KEYSTORE_TYPE}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEY_ALIAS",
-                                        "value": "${HTTPS_NAME}"
-                                    },
-                                    {
-                                        "name": "DATAVIRT_TRANSPORT_KEYSTORE_PASSWORD",
-                                        "value": "${HTTPS_PASSWORD}"
                                     },
                                     {
                                         "name": "SSO_URL",
@@ -847,30 +640,6 @@
                                         "value": "${SSO_PUBLIC_KEY}"
                                     },
                                     {
-                                        "name": "SSO_BEARER_ONLY",
-                                        "value": "${SSO_BEARER_ONLY}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_SECRET",
-                                        "value": "${SSO_SAML_KEYSTORE_SECRET}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE",
-                                        "value": "${SSO_SAML_KEYSTORE}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_DIR",
-                                        "value": "/etc/sso-saml-secret-volume"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_CERTIFICATE_NAME",
-                                        "value": "${SSO_SAML_CERTIFICATE_NAME}"
-                                    },
-                                    {
-                                        "name": "SSO_SAML_KEYSTORE_PASSWORD",
-                                        "value": "${SSO_SAML_KEYSTORE_PASSWORD}"
-                                    },
-                                    {
                                         "name": "SSO_SECRET",
                                         "value": "${SSO_SECRET}"
                                     },
@@ -885,18 +654,6 @@
                                     {
                                         "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
                                         "value": "${SSO_DISABLE_SSL_CERTIFICATE_VALIDATION}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE",
-                                        "value": "${SSO_TRUSTSTORE}"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_DIR",
-                                        "value": "/etc/sso-secret-volume"
-                                    },
-                                    {
-                                        "name": "SSO_TRUSTSTORE_PASSWORD",
-                                        "value": "${SSO_TRUSTSTORE_PASSWORD}"
                                     },
                                     {
                                         "name": "SSO_OPENIDCONNECT_DEPLOYMENTS",
@@ -922,18 +679,6 @@
                                 "name": "configuration",
                                 "secret": {
                                     "secretName": "${CONFIGURATION_NAME}"
-                                }
-                            },
-                            {
-                                "name": "datavirt-keystore-volume",
-                                "secret": {
-                                    "secretName": "${HTTPS_SECRET}"
-                                }
-                            },
-                            {
-                                "name": "datavirt-jgroups-keystore-volume",
-                                "secret": {
-                                    "secretName": "${JGROUPS_ENCRYPT_SECRET}"
                                 }
                             }
                         ]

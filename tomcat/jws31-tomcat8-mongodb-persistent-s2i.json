@@ -11,7 +11,7 @@
         },
         "name": "jws31-tomcat8-mongodb-persistent-s2i"
     },
-    "message": "A new persistent JWS application for Tomcat 8 (using MongoDB) has been created in your project. The username/password for administering your JWS is ${JWS_ADMIN_USERNAME}/${JWS_ADMIN_PASSWORD}. For accessing the MongoDB database \"${DB_DATABASE}\" use the credentials ${DB_USERNAME}/${DB_PASSWORD} (Admin password is \"${DB_ADMIN_PASSWORD}\"). Please be sure to create the \"jws-service-account\" service account and the secret named \"${JWS_HTTPS_SECRET}\" containing the ${JWS_HTTPS_CERTIFICATE} file used for serving secure content.",
+    "message": "A new persistent JWS application for Tomcat 8 (using MongoDB) has been created in your project. The username/password for administering your JWS is ${JWS_ADMIN_USERNAME}/${JWS_ADMIN_PASSWORD}. For accessing the MongoDB database \"${DB_DATABASE}\" use the credentials ${DB_USERNAME}/${DB_PASSWORD} (Admin password is \"${DB_ADMIN_PASSWORD}\").",
     "labels": {
         "template": "jws31-tomcat8-mongodb-persistent-s2i",
         "xpaas": "1.4.0"
@@ -79,34 +79,6 @@
             "name": "VOLUME_CAPACITY",
             "value": "512Mi",
             "required": true
-        },
-        {
-            "displayName": "Secret Name",
-            "description": "The name of the secret containing the certificate files",
-            "name": "JWS_HTTPS_SECRET",
-            "value": "jws-app-secret",
-            "required": true
-        },
-        {
-            "displayName": "Certificate Name",
-            "description": "The name of the certificate file within the secret",
-            "name": "JWS_HTTPS_CERTIFICATE",
-            "value": "server.crt",
-            "required": false
-        },
-        {
-            "displayName": "Certificate Key Name",
-            "description": "The name of the certificate key file within the secret",
-            "name": "JWS_HTTPS_CERTIFICATE_KEY",
-            "value": "server.key",
-            "required": false
-        },
-        {
-            "displayName": "Certificate Password",
-            "description": "The certificate password",
-            "name": "JWS_HTTPS_CERTIFICATE_PASSWORD",
-            "value": "",
-            "required": false
         },
         {
             "displayName": "Datasource Minimum Pool Size",
@@ -253,31 +225,6 @@
             "spec": {
                 "ports": [
                     {
-                        "port": 8443,
-                        "targetPort": 8443
-                    }
-                ],
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}"
-                }
-            },
-            "metadata": {
-                "name": "secure-${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                },
-                "annotations": {
-                    "description": "The web server's https port.",
-                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"${APPLICATION_NAME}-mongodb\", \"kind\": \"Service\"}]"
-                }
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "spec": {
-                "ports": [
-                    {
                         "port": 27017,
                         "targetPort": 27017
                     }
@@ -332,7 +279,10 @@
             "spec": {
                 "host": "${HOSTNAME_HTTPS}",
                 "to": {
-                    "name": "secure-${APPLICATION_NAME}"
+                    "name": "${APPLICATION_NAME}"
+                },
+                "tls": {
+                    "termination": "edge"
                 }
             }
         },
@@ -457,7 +407,6 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "jws-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
@@ -474,11 +423,6 @@
                                     }
                                 },
                                 "volumeMounts": [
-                                    {
-                                        "name": "jws-certificate-volume",
-                                        "mountPath": "/etc/jws-secret-volume",
-                                        "readOnly": true
-                                    }
                                 ],
                                 "ports": [
                                     {
@@ -489,11 +433,6 @@
                                     {
                                         "name": "http",
                                         "containerPort": 8080,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "https",
-                                        "containerPort": 8443,
                                         "protocol": "TCP"
                                     }
                                 ],
@@ -535,22 +474,6 @@
                                         "value": "${DB_TX_ISOLATION}"
                                     },
                                     {
-                                        "name": "JWS_HTTPS_CERTIFICATE_DIR",
-                                        "value": "/etc/jws-secret-volume"
-                                    },
-                                    {
-                                        "name": "JWS_HTTPS_CERTIFICATE",
-                                        "value": "${JWS_HTTPS_CERTIFICATE}"
-                                    },
-                                    {
-                                        "name": "JWS_HTTPS_CERTIFICATE_KEY",
-                                        "value": "${JWS_HTTPS_CERTIFICATE_KEY}"
-                                    },
-                                    {
-                                        "name": "JWS_HTTPS_CERTIFICATE_PASSWORD",
-                                        "value": "${JWS_HTTPS_CERTIFICATE_PASSWORD}"
-                                    },
-                                    {
                                         "name": "JWS_ADMIN_USERNAME",
                                         "value": "${JWS_ADMIN_USERNAME}"
                                     },
@@ -562,12 +485,6 @@
                             }
                         ],
                         "volumes": [
-                            {
-                                "name": "jws-certificate-volume",
-                                "secret": {
-                                    "secretName": "${JWS_HTTPS_SECRET}"
-                                }
-                            }
                         ]
                     }
                 }
