@@ -13,11 +13,11 @@ refer to the directories in this repository.
 
 ## Steps to getting going
 
-You need to do these steps no matter which Middleware you are going to use.
+You need to do these steps no matter which Middleware you are going to use. Be sure to change the [My-Project] in the second command to your project name. 
 Do all the following from the command line:
 
-1. `oc create -f https://https://raw.githubusercontent.com/redhat-middleware-hackathon/openshift-files/master/jboss-image-streams.json  `
-2. `oc policy add-role-to-user view system:serviceaccount:MY-PROJECT:default`
+1. `oc create -f https://raw.githubusercontent.com/redhat-middleware-hackathon/openshift-files/master/jboss-image-streams.json  `
+2. `oc policy add-role-to-user view system:serviceaccount:[MY-PROJECT]:default`
 
 ## Choosing your Software
 
