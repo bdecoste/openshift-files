@@ -100,6 +100,14 @@
             "name": "REST_SECURITY_DOMAIN",
             "value": "",
             "required": false
+        },
+        {
+            "displayName": "JGroups Cluster Password",
+            "description": "JGroups cluster password",
+            "name": "JGROUPS_CLUSTER_PASSWORD",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
         }
     ],
     "objects": [
@@ -372,6 +380,10 @@
                                     {
                                         "name": "REST_SECURITY_DOMAIN",
                                         "value": "${REST_SECURITY_DOMAIN}"
+                                    },
+                                    {
+                                        "name": "JGROUPS_CLUSTER_PASSWORD",
+                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     }
                                 ]
                             }

@@ -15,7 +15,7 @@
         "template": "eap70-amq-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new EAP 7 and A-MQ based application with SSL support has been created in your project. The username/password for accessing the A-MQ service is ${MQ_USERNAME}/${MQ_PASSWORD}. Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets: \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
+    "message": "A new EAP 7 and A-MQ based application with SSL support has been created in your project. The username/password for accessing the A-MQ service is ${MQ_USERNAME}/${MQ_PASSWORD}.",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -136,6 +136,14 @@
             "displayName": "Generic Webhook Secret",
             "description": "Generic build trigger secret",
             "name": "GENERIC_WEBHOOK_SECRET",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "JGroups Cluster Password",
+            "description": "JGroups cluster password",
+            "name": "JGROUPS_CLUSTER_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -462,6 +470,10 @@
                                                 "fieldPath": "metadata.namespace"
                                             }
                                         }
+                                    },
+                                    {
+                                        "name": "JGROUPS_CLUSTER_PASSWORD",
+                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     },
                                     {
                                         "name": "AUTO_DEPLOY_EXPLODED",

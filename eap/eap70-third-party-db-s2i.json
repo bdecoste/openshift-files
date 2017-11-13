@@ -15,7 +15,7 @@
         "template": "eap70-third-party-db-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new EAP 7 based application with SSL support has been created in your project. Please be sure to create the \"${SERVICE_ACCOUNT_NAME}\" service account and the following secrets:\"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed application(s);  \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
+    "message": "A new EAP 7 based application with SSL support has been created in your project.",
     "parameters": [
         {
             "displayName": "Application Name",
@@ -114,6 +114,14 @@
             "displayName": "Generic Webhook Secret",
             "description": "A secret string used to configure the Generic webhook.",
             "name": "GENERIC_WEBHOOK_SECRET",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "JGroups Cluster Password",
+            "description": "JGroups cluster password",
+            "name": "JGROUPS_CLUSTER_PASSWORD",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -442,6 +450,10 @@
                                     {
                                         "name": "MQ_TOPICS",
                                         "value": "${MQ_TOPICS}"
+                                    },
+                                    {
+                                        "name": "JGROUPS_CLUSTER_PASSWORD",
+                                        "value": "${JGROUPS_CLUSTER_PASSWORD}"
                                     },
                                     {
                                         "name": "AUTO_DEPLOY_EXPLODED",
