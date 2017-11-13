@@ -34,6 +34,14 @@ Once you have chosen the software you want, you have two choices:
 Once you are looking at the raw file, copy the URL from your browser. Now do the following command:
 `oc create -f <url you just copied>` 
 
+Once that is done - you have two methods to use the templates you just added to your project:
+
+1. In the web console, go to the Add Project button and then in the catalog, under Java, you should see a new template for the one you added. This may be under the product name you added. For example, EAP-basic will end up under the EAP category.
+2. Using the command line you can do:
+    a. oc get templates (this will give you a list of the templates in your project)
+    b. oc describe templates [your template of interest] (this will show you the possible parameters you can fill in
+    c. oc new-app [your template of interest] -p parameter1=value1 paratermeter2=value2
+
 ## Software and short blurb
 
 | Product | Project | Description |
