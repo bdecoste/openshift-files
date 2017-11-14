@@ -21,7 +21,7 @@
             "displayName": "Application Name",
             "description": "The name for the application.",
             "name": "APPLICATION_NAME",
-            "value": "jws-app",
+            "value": "",
             "required": true
         },
         {
@@ -35,21 +35,21 @@
             "displayName": "Git Repository URL",
             "description": "Git source URI for application",
             "name": "SOURCE_REPOSITORY_URL",
-            "value": "https://github.com/jboss-openshift/openshift-quickstarts.git",
+            "value": "",
             "required": true
         },
         {
             "displayName": "Git Reference",
             "description": "Git branch/tag reference",
             "name": "SOURCE_REPOSITORY_REF",
-            "value": "1.2",
+            "value": "",
             "required": false
         },
         {
             "displayName": "Context Directory",
             "description": "Path within Git project to build; empty for root project directory.",
             "name": "CONTEXT_DIR",
-            "value": "tomcat-websocket-chat",
+            "value": "",
             "required": false
         },
         {
