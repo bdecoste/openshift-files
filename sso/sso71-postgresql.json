@@ -213,27 +213,6 @@
         {
             "kind": "Route",
             "apiVersion": "v1",
-            "id": "${APPLICATION_NAME}-http",
-            "metadata": {
-                "name": "${APPLICATION_NAME}",
-                "labels": {
-                    "application": "${APPLICATION_NAME}",
-                    "component": "server"
-                },
-                "annotations": {
-                    "description": "Route for application's http service."
-                }
-            },
-            "spec": {
-                "host": "${HOSTNAME_HTTP}",
-                "to": {
-                    "name": "${APPLICATION_NAME}"
-                }
-            }
-        },
-        {
-            "kind": "Route",
-            "apiVersion": "v1",
             "id": "${APPLICATION_NAME}-https",
             "metadata": {
                 "name": "secure-${APPLICATION_NAME}",
@@ -430,8 +409,6 @@
                                     }
                                 ]
                             }
-                        ],
-                        "volumes": [
                         ]
                     }
                 }
@@ -521,7 +498,21 @@
                                         "name": "POSTGRESQL_SHARED_BUFFERS",
                                         "value": "${POSTGRESQL_SHARED_BUFFERS}"
                                     }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/var/lib/pgsql/data",
+                                        "name": "${APPLICATION_NAME}-data"
+                                    }
                                 ]
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": ""
+                                },
+                                "name": "${APPLICATION_NAME}-data"
                             }
                         ]
                     }
