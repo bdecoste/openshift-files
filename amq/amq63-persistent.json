@@ -28,7 +28,7 @@
             "displayName": "Split Data?",
             "description": "Split the data directory for each node in a mesh, this is now the default behaviour.",
             "name": "AMQ_SPLIT",
-            "value": "true",
+            "value": "false",
             "required": false
         },
         {
@@ -349,113 +349,6 @@
                                     {
                                         "name": "AMQ_QUEUE_MEMORY_LIMIT",
                                         "value": "${AMQ_QUEUE_MEMORY_LIMIT}"
-                                    }
-                                ]
-                            }
-                        ],
-                        "volumes": [
-                            {
-                                "name": "${APPLICATION_NAME}-amq-pvol",
-                                "persistentVolumeClaim": {
-                                    "claimName": "${APPLICATION_NAME}-amq-claim"
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "kind": "DeploymentConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-drainer",
-                "labels": {
-                    "application": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "strategy": {
-                    "type": "Recreate"
-                },
-                "triggers": [
-                    {
-                        "type": "ImageChange",
-                        "imageChangeParams": {
-                            "automatic": true,
-                            "containerNames": [
-                                "${APPLICATION_NAME}-drainer"
-                            ],
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "name": "jboss-amq-63:1.1"
-                            }
-                        }
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ],
-                "replicas": 1,
-                "selector": {
-                    "deploymentConfig": "${APPLICATION_NAME}-drainer"
-                },
-                "template": {
-                    "metadata": {
-                        "name": "${APPLICATION_NAME}-drainer",
-                        "labels": {
-                            "deploymentConfig": "${APPLICATION_NAME}-drainer",
-                            "application": "${APPLICATION_NAME}"
-                        }
-                    },
-                    "spec": {
-                        "terminationGracePeriodSeconds": 60,
-                        "containers": [
-                            {
-                                "name": "${APPLICATION_NAME}-drainer",
-                                "image": "jboss-amq-63",
-                                "command": [
-                                    "/opt/amq/bin/drain.sh"
-                                ],
-                                "imagePullPolicy": "Always",
-                                "volumeMounts": [
-                                    {
-                                        "mountPath": "/opt/amq/data",
-                                        "name": "${APPLICATION_NAME}-amq-pvol"
-                                    }
-                                ],
-                                "ports": [
-                                    {
-                                        "name": "jolokia",
-                                        "containerPort": 8778,
-                                        "protocol": "TCP"
-                                    },
-                                    {
-                                        "name": "tcp",
-                                        "containerPort": 61616,
-                                        "protocol": "TCP"
-                                    }
-                                ],
-                                "env": [
-                                    {
-                                        "name": "AMQ_USER",
-                                        "value": "${MQ_USERNAME}"
-                                    },
-                                    {
-                                        "name": "AMQ_PASSWORD",
-                                        "value": "${MQ_PASSWORD}"
-                                    },
-                                    {
-                                        "name": "AMQ_MESH_SERVICE_NAME",
-                                        "value": "${APPLICATION_NAME}-amq-tcp"
-                                    },
-                                    {
-                                        "name": "AMQ_MESH_SERVICE_NAMESPACE",
-                                        "valueFrom": {
-                                            "fieldRef": {
-                                                "fieldPath": "metadata.namespace"
-                                            }
-                                        }
                                     }
                                 ]
                             }
