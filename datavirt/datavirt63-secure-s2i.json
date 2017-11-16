@@ -15,7 +15,7 @@
         "template": "datavirt63-secure-s2i",
         "xpaas": "1.4.0"
     },
-    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the \"datavirt-service-account\" service account and the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
+    "message": "A new data service has been created in your project.  The username/password for accessing the service is ${TEIID_USERNAME}/${TEIID_PASSWORD}.  Please be sure to create the following secrets: \"${CONFIGURATION_NAME}\" containing the datasource configuration details required by the deployed VDB(s); \"${HTTPS_SECRET}\" containing the ${HTTPS_KEYSTORE} file used for serving secure content; ",
     "parameters": [
         {
             "description": "The name for the application.",
@@ -391,21 +391,7 @@
                         "uri": "${SOURCE_REPOSITORY_URL}",
                         "ref": "${SOURCE_REPOSITORY_REF}"
                     },
-                    "contextDir": "${CONTEXT_DIR}",
-                    "images": [
-                        {
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "name": "jboss-datagrid65-client-openshift:1.0"
-                            },
-                            "paths": [
-                                {
-                                    "destinationDir": "./${CONTEXT_DIR}/extensions/datagrid65",
-                                    "sourcePath": "/extensions/."
-                                }
-                            ]
-                        }
-                    ]
+                    "contextDir": "${CONTEXT_DIR}"
                 },
                 "strategy": {
                     "type": "Source",
@@ -459,15 +445,6 @@
                         "imageChange": {}
                     },
                     {
-                        "type": "ImageChange",
-                        "imageChange": {
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "name": "jboss-datagrid65-client-openshift:1.0"
-                            }
-                        }
-                    },
-                    {
                         "type": "ConfigChange"
                     }
                 ]
@@ -517,7 +494,6 @@
                         }
                     },
                     "spec": {
-                        "serviceAccountName": "datavirt-service-account",
                         "terminationGracePeriodSeconds": 60,
                         "containers": [
                             {
