@@ -248,6 +248,11 @@
                                 "name": "${APPLICATION_NAME}-amq",
                                 "image": "jboss-amq-63",
                                 "imagePullPolicy": "Always",
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}"
+                                    }
+                                },
                                 "volumeMounts": [
                                     {
                                         "mountPath": "/opt/amq/data",
