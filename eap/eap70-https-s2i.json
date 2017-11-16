@@ -321,8 +321,11 @@
                                 "name": "${APPLICATION_NAME}",
                                 "image": "${APPLICATION_NAME}",
                                 "imagePullPolicy": "Always",
-                                "volumeMounts": [
-                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}"
+                                    }
+                                },
                                 "lifecycle": {
                                     "preStop": {
                                         "exec": {
@@ -404,8 +407,6 @@
                                     }
                                 ]
                             }
-                        ],
-                        "volumes": [
                         ]
                     }
                 }
