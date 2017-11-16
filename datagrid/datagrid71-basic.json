@@ -246,6 +246,11 @@
                                 "name": "${APPLICATION_NAME}",
                                 "image": "jboss-datagrid71-openshift",
                                 "imagePullPolicy": "Always",
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}"
+                                    }
+                                },
                                 "livenessProbe": {
                                     "exec": {
                                         "command": [
