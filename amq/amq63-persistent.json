@@ -95,6 +95,12 @@
             "name": "AMQ_STORAGE_USAGE_LIMIT",
             "value": "100 gb",
             "required": false
+        },
+        {
+            "description": "Container memory limit",
+            "name": "MEMORY_LIMIT",
+            "value": "1Gi",
+            "required": false
         }
     ],
     "objects": [
