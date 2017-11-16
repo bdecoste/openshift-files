@@ -25,20 +25,6 @@
             "required": false
         },
         {
-            "displayName": "KIE Server Protocol",
-            "description": "The protocol to access the KIE Server REST interface.",
-            "name": "KIE_SERVER_PROTOCOL",
-            "value": "https",
-            "required": false
-        },
-        {
-            "displayName": "KIE Server Port",
-            "description": "The port to access the KIE Server REST interface.",
-            "name": "KIE_SERVER_PORT",
-            "value": "8443",
-            "required": false
-        },
-        {
             "displayName": "KIE Server Username",
             "description": "The user name to access the KIE Server REST or JMS interface.",
             "name": "KIE_SERVER_USER",
@@ -233,6 +219,12 @@
             "name": "POSTGRESQL_IMAGE_STREAM_TAG",
             "value": "9.5",
             "required": true
+        },
+        {
+            "description": "Container memory limit",
+            "name": "MEMORY_LIMIT",
+            "value": "1Gi",
+            "required": false
         }
     ],
     "objects": [
@@ -459,8 +451,11 @@
                                 "name": "${APPLICATION_NAME}",
                                 "image": "${APPLICATION_NAME}",
                                 "imagePullPolicy": "Always",
-                                "volumeMounts": [
-                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${MEMORY_LIMIT}"
+                                    }
+                                },
                                 "livenessProbe": {
                                     "exec": {
                                         "command": [
@@ -495,14 +490,6 @@
                                     {
                                         "name": "KIE_CONTAINER_DEPLOYMENT",
                                         "value": "${KIE_CONTAINER_DEPLOYMENT}"
-                                    },
-                                    {
-                                        "name": "KIE_SERVER_PROTOCOL",
-                                        "value": "${KIE_SERVER_PROTOCOL}"
-                                    },
-                                    {
-                                        "name": "KIE_SERVER_PORT",
-                                        "value": "${KIE_SERVER_PORT}"
                                     },
                                     {
                                         "name": "KIE_SERVER_USER",
@@ -570,8 +557,6 @@
                                     }
                                 ]
                             }
-                        ],
-                        "volumes": [
                         ]
                     }
                 }
@@ -655,7 +640,21 @@
                                         "name": "POSTGRESQL_SHARED_BUFFERS",
                                         "value": "${POSTGRESQL_SHARED_BUFFERS}"
                                     }
+                                ],
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/var/lib/pgsql/data",
+                                        "name": "${APPLICATION_NAME}-data"
+                                    }
                                 ]
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": ""
+                                },
+                                "name": "${APPLICATION_NAME}-data"
                             }
                         ]
                     }
